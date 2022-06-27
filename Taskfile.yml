@@ -1,12 +1,60 @@
 version: '3'
 
 tasks:
+  run:
+    desc: Run launch-api
+    dir: ./cmd/launches-api
+    cmds:
+      - go run .
+
+  build:
+    desc: Build launch-api
+    dir: ./cmd/launches-api
+    cmds:
+      - go build -o launch-api.exe .
+
   lint:
     desc: Run linters
     cmds:
-      - echo lint
+      - buf lint
+      - go vet ./...
+      - golangci-lint run
 
   test:
     desc: Run tests
     cmds:
-      - echo test
+      - go test ./...
+
+  format:
+    desc: Run source files with golines and goimports
+    cmds:
+      - buf format -w
+      - for f in $(find . -name *.go -print); do golines --base-formatter="goimports -local $(go list -m)" -w $f; done
+
+  cover:
+    desc: Go code coverage
+    cmds:
+      - go test ./... -coverprofile=coverage.out
+      - go tool cover -func=coverage.out | grep ^total
+      # - go tool cover -html=coverage.out
+      - rm -f coverage.out
+
+  generate:
+    desc: Generate Go code
+    cmds:
+      - go generate ./internal/adapters/ent
+      - oapi-codegen --config=types.cfg.yaml api/openapi/v1/launches.yaml
+      - oapi-codegen --config=server.cfg.yaml api/openapi/v1/launches.yaml
+      - buf generate
+
+  tools:
+    desc: Install tools
+    cmds:
+      - go install github.com/segmentio/golines@latest
+      - go install golang.org/x/tools/cmd/goimports@latest
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - go install github.com/bufbuild/buf/cmd/buf@latest # not recommended way to install
+      - go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+      - go install entgo.io/ent/cmd/ent@latest
+      - go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest

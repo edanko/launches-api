@@ -1,0 +1,38 @@
+app:
+  environment: development
+  shutdownTimeout: 5s
+db:
+  host: 192.168.1.214
+  port: 5432
+  user: user
+  password: password
+  database: db
+  sslMode: disable
+ldap:
+  host: 192.168.1.214
+  port: 3890
+  user: uid=admin,ou=people,dc=example,dc=com
+  password: password
+  baseDN: "ou=people,dc=example,dc=com"
+  filterUsers: "(&(objectClass=person)(memberof=cn=users,ou=groups,dc=example,dc=com))"
+nats:
+  host: 192.168.1.214
+  port: 4222
+debug:
+  host: 0.0.0.0
+  port: 4000
+http:
+  host: 0.0.0.0
+  port: 3000
+  readTimeout: 5s
+  writeTimeout: 10s
+  idleTimeout: 120s
+grpc:
+  host: 0.0.0.0
+  port: 3001
+  serverMinTime: 5m
+  serverTime: 2h
+  serverTimeout: 20s
+  connTime: 10s
+  connTimeout: 20s
+

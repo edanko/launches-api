@@ -1,0 +1,4 @@
+package: ports
+generate:
+  models: true
+output: internal/ports/launch-types.gen.go
