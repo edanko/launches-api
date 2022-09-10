@@ -1,0 +1,5 @@
+package: ports
+generate:
+  echo-server: true
+#  embedded-spec: true
+output: internal/ports/launch-server.gen.go
